@@ -1,14 +1,11 @@
 from django.shortcuts import render
 from .models import *
 
-def store(request):
-    products = Product.objects.all
-    context = {'products':products}
-    return render(request, 'Shop/Shop.html')
 
 #rendering the pages so it shows up on application
 def Shop(request):
-    context  = {}
+    products = Product.objects.all()
+    context = {'products': products}
     return render(request, 'Shop/Shop.html', context)
 
 def Cart(request):

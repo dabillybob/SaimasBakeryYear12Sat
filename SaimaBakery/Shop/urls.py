@@ -1,8 +1,13 @@
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
+
+
 
 urlpatterns = [
     path('', views.Shop, name="Shop"),
     path('Cart/', views.Cart, name='Cart'),
     path('Checkout/', views.Checkout, name='Checkout')
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
