@@ -4,28 +4,31 @@
 
 <div class="container">
     <div class="row">
+        <!-- Order Summary on the Left -->
         <div class="col-lg-6">
             <div class="box-element" id="form-wrapper">
-
                 <!--shows the summary of order and an option to go back to the previous page-->
                 <div class="box-element">
                     <a class="btn btn-outline-dark" href="{% url 'Cart' %}">&#x2190; Back to Cart</a>
                     <hr>
                     <h3>Order Summary</h3>
                     <hr>
+                    {% for item in items %}
+                    <!--shows the image and information of products-->
                     <div class="cart-row">
-                        <div style="flex:2"><img class="row-image" src="{% static 'images/orange.png' %}"></div>
-                        <div style="flex:2"><p>Product 1</p></div>
-                        <div style="flex:1"><p>$20.00</p></div>
-                        <div style="flex:1"><p>x2</p></div>
+                        <div style="flex:2"><img class="row-image" src="{{item.product.image.url}}"></div>
+                        <div style="flex:2"><p>{{item.product.name}}</p></div>
+                        <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
+                        <div style="flex:1"><p>x{{item.quantity}}</p></div>
                     </div>
-                    <h5>Items: 2</h5>
-                    <h5>Total: $40</h5>
+                    {% endfor %}
+                    <h5>Items:   {{order.get_cart_items}}</h5>
+                    <h5>Total:   ${{order.get_cart_total|floatformat:2}}</h5>
                 </div>
-
             </div>
         </div>
 
+        <!-- Customer Information Form on the Right -->
         <div class="col-lg-6">
             <!--customer enters their information-->
             <form id="form">
@@ -39,7 +42,7 @@
                 </div>
                 <div id="customer-info">
                     <hr>
-                    <p>Shipping Information:</p>
+                    <p>Delivery Information:</p>
                     <hr>
                     <div class="form-field">
                         <input class="form-control" type="text" name="address" placeholder="Address..">
@@ -51,18 +54,77 @@
                         <input class="form-control" type="text" name="state" placeholder="State..">
                     </div>
                     <div class="form-field">
-                        <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
+                        <input class="form-control" type="text" name="postcode" placeholder="Post Code">
                     </div>
                 </div>
                 <hr>
                 <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
             </form>
             <br>
+            <!-- Payment button and PayPal button container -->
             <div class="box-element hidden" id="payment-info">
                 <small>Paypal Options</small>
+                <div id="paypal-button-container"></div>
             </div>
         </div>
+        <div id="shipping-info"></div> <!-- Added this line -->
     </div>
 </div>
+
+<!-- Include the PayPal JavaScript SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=AUD&disable-funding=card"></script>
+
+<script>
+    // Render the PayPal button into #paypal-button-container
+    var paypalButtonContainer = document.getElementById('paypal-button-container');
+    paypal.Buttons({
+
+    style: {
+          color:  'gold',
+          shape:  'rect',
+       },
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ order.get_cart_total }}'
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                alert('Transaction completed by ' + details.payer.name.given_name + '!');
+            });
+        }
+    }).render(paypalButtonContainer);
+</script>
+
+<script type="text/javascript">
+    var csrftoken = '{{ csrf_token }}';
+    var form = document.getElementById('form');
+    var paymentInfo = document.getElementById('payment-info');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Form Submitted...');
+        document.getElementById('form-button').classList.add("hidden");
+        paymentInfo.classList.remove("hidden");
+
+        // Optionally, if you want to fetch order data or process additional logic
+        // before showing the PayPal button, you can do it here.
+    });
+
+    // Only show the PayPal button if the form has been submitted and payment info is shown
+    function showPayPalButton() {
+        paymentInfo.classList.remove("hidden");
+        // Render the PayPal button here if needed
+    }
+</script>
 
 {% endblock content %}
