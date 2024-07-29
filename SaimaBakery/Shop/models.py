@@ -20,6 +20,13 @@ class Product(models.Model):
     image = models.ImageField(null=True, blank=True)
 
     # returns product name as a string
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
     def __str__(self):
         return self.name
 
