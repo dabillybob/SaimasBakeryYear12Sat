@@ -14,6 +14,7 @@
 	<script type="text/javascript">
 		var user = '{{request.user}}'
 
+	// Retrieves a specific cookies value by name
 		function getToken(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -29,6 +30,7 @@
     }
     return cookieValue;
 }
+// Retrieves CSRF token from cokies for security
 var csrftoken = getToken('csrftoken')
 
 	function getCookie(name) {

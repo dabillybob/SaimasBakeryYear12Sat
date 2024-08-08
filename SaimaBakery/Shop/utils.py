@@ -4,6 +4,12 @@ from .models import *
 
 # This file has shortcuts of functions so the code is not as chunky
 def cookieCart(request):
+    """
+    This function loads cart data from the 'cart' cookie, if the cookie is absent or invalid,
+    it starts with an empty cart. It then calculates the total and ammount of items for the cart.
+    """
+
+
     try:
         cart = json.loads(request.COOKIES.get('cart', '{}'))
     except (KeyError, json.JSONDecodeError):
@@ -42,6 +48,13 @@ def cookieCart(request):
 
 
 def cartData(request):
+
+    """
+    Retrieve cart data for authenticated or anonymous users.
+
+    This function determines if the user is authenticated if so, it retrieves the cart data
+    from database. if user is not authenticated, it uses cookie data to get cart details.
+    """
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)

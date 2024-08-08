@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 
-
+#define url patterns for app
 urlpatterns = [
     path('', views.Shop, name="Shop"),
     path('Cart/', views.Cart, name='Cart'),

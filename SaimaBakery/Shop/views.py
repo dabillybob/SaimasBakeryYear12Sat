@@ -8,7 +8,7 @@ from .utils import cookieCart, cartData
 #rendering the pages so it shows up on application
 #cart items is to calculate total number of items in cart
 def Shop(request):
-
+#renders page with list of products and number of products in cart
     data = cartData(request)
     cartItems = data['cartItems']
 
@@ -18,7 +18,7 @@ def Shop(request):
     return render(request, 'Shop/Shop.html', context)
 
 def Cart(request):
-
+#renders cart page with items in cart and order details
     data = cartData(request)
     cartItems = data['cartItems']
     order = data['order']
@@ -30,7 +30,7 @@ def Cart(request):
 
 
 def Checkout(request):
-
+#renders checkout page with items in cart and order details
     data = cartData(request)
     cartItems = data['cartItems']
     order = data['order']
@@ -40,6 +40,7 @@ def Checkout(request):
     return render(request, 'Shop/Checkout.html', context)
 
 def updateItem(request):
+#updates quantity of items in cart based on specified action
     data = json.loads(request.body)
     productId = data['productId']
     action = data['action']
@@ -69,6 +70,13 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def processOrder(request):
+    """
+    Processes  order for authenticated or non-authenticated users
+
+    for authenticated users it updates  order in the database.
+    for non-authenticated users it creates a new customer, order, and stores it in admin page
+    """
+
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
