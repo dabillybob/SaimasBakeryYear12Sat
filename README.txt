@@ -15,3 +15,12 @@ cd "PATHTOPROJECT/Year12SatOnlineBakery/SaimaBakery"
 python3 manage.py runserver
 
 then enter the development server link
+
+To create an admin user:
+cd "PATHTOPROJECT/Year12SatOnlineBakery/SaimaBakery"
+python3 manage.py createsuperuser
+
+To access admin panel:
+at the end of development link type /admin
+for example:
+https://127.0.0.1:8000/admin
