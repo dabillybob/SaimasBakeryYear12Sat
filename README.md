@@ -1,13 +1,17 @@
 Required packages some may already be in by default:
+# Bilal's Project
+
+## Requirements 
 
 autopep8
 Django
 pep8
 pillow
-setuptools==65.5.0
-wheel==0.43.0
+```setuptools==65.5.0```
 
-How to start the website:
+```wheel==0.43.0```
+
+### How to start the website:
 
 inside of terminal enter:
 
